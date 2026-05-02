@@ -1,6 +1,0 @@
-.pio/
-.vscode/
-.idea/
-cmake-build-*/
-*.bin
-*.elf
