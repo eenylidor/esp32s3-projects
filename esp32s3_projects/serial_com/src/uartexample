@@ -1,0 +1,55 @@
+/*
+  Wokwi Custom UART Chip example
+
+  The chip implements a simple ROT13 letter substitution cipher:
+  https://en.wikipedia.org/wiki/ROT13
+
+  See https://link.wokwi.com/custom-chips-alpha for more info about custom chips
+*/
+
+#include <stdio.h>
+#include <string.h>
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
+#include "driver/uart.h"
+#include "driver/gpio.h"
+
+#define UART_CHIP    UART_NUM_1
+#define CHIP_TX_PIN  17           // ESP32 TX -> chip RX
+#define CHIP_RX_PIN  16           // ESP32 RX <- chip TX
+#define BAUD_RATE    115200
+#define BUF_SIZE     256
+
+static void uart_chip_task(void *arg) {
+    uint8_t data[BUF_SIZE];
+    while (1) {
+        int len = uart_read_bytes(UART_CHIP, data, sizeof(data) - 1, pdMS_TO_TICKS(20));
+        if (len > 0) {
+            data[len] = '\0';
+            printf("%s", (char *)data);
+            fflush(stdout);
+        }
+    }
+}
+
+void app_main(void) {
+    const uart_config_t uart_cfg = {
+        .baud_rate  = BAUD_RATE,
+        .data_bits  = UART_DATA_8_BITS,
+        .parity     = UART_PARITY_DISABLE,
+        .stop_bits  = UART_STOP_BITS_1,
+        .flow_ctrl  = UART_HW_FLOWCTRL_DISABLE,
+    };
+    uart_driver_install(UART_CHIP, BUF_SIZE * 2, 0, 0, NULL, 0);
+    uart_param_config(UART_CHIP, &uart_cfg);
+    uart_set_pin(UART_CHIP, CHIP_TX_PIN, CHIP_RX_PIN, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE);
+
+
+    printf("Data received from UART chip:\n");
+    fflush(stdout);
+
+    const char *msg = "Uryyb, HNEG!";
+    uart_write_bytes(UART_CHIP, msg, strlen(msg));
+
+    xTaskCreate(uart_chip_task, "uart_chip_task", 4096, NULL, 10, NULL);
+}
