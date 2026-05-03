@@ -1,10 +1,14 @@
-# 📚 Monorepo Workflow: Single Project Operations
-
-# Part 1: Pull a Single Project (Sparse Checkout)
+# *📚 Mono-repo Workflow: Single Project Operations*
 
 
-Navigate to you CLionProjects directory.
-===
+
+
+
+#### *Part 1: Pull a Single Project (Sparse Checkout)*
+
+###### Navigate to you CLionProjects directory.
+
+
 
 Bash:       cd \~/CLionProjects/
 
@@ -12,31 +16,35 @@ Powershell: cd \~\\CLionProjects\\
 
 
 
-# Clone the repository without all the files.
+###### Clone the repository without all its files.
 
 git clone --filter=blob:none --sparse https://github.com/eenylidor/esp32s3-projects.git
 
 
 
-# Navigate inside the repo online to the directory of the project you want to work on.
+###### Navigate inside the repo online to the directory of the project you want to work on.
 
 cd esp32s3-projects/
 
 
 
-# request the files for the project you want to work on.
+###### request the files for the project you want to work on.
 
 git sparse-checkout set esp32s3\_projects/<project\_name>
 
 
 
-# Part 2: Push a Single New Project (Sparse Add)
 
-# 1\. Clone the repository structure (Sparse Clone)
+
+
+
+#### *Part 2: Push a Single New Project (Sparse Add)*
+
+###### Clone the repository structure (Sparse Clone)
+
+
 
 git clone --filter=blob:none --sparse https://github.com/eenylidor/esp32s3-projects.git
-
-
 
 cd esp32s3-projects/
 
@@ -53,8 +61,6 @@ git add esp32s3\_projects/<project\_name>/
 
 
 git commit -m "Added new project: <project\_name>"
-
-
 
 git push
 
