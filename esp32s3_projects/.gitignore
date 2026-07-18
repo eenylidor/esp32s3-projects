@@ -4,5 +4,5 @@
 **/cmake-build-*/
 **/*.bin
 **/*.elf
-**/.gitignore
-!.gitignore
+.gitignore
+!/.gitignore
