@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+SOURCE=$1
+FILENAME="${SOURCE%.*}"
+MBEDTLS_PATH="${2:-/home/eenylidor/final_project_workspace//C_libs/mbedtls}"
+
+cat << MAKEFILE_EOF > Makefile
+CC_ARM = arm-linux-gnueabihf-gcc
+CFLAGS = -O2 -Wall
+STATIC_FLAG = -static
+INCLUDES = -I$MBEDTLS_PATH/include
+LDFLAGS = -L$MBEDTLS_PATH/library -lmbedcrypto
+
+.PHONY: build-static-arm clean
+
+build-static-arm:
+	\$(CC_ARM) \$(CFLAGS) \$(STATIC_FLAG) \$(INCLUDES) $SOURCE -o ${FILENAME}_static_arm \$(LDFLAGS)
+
+clean:
+	rm -f ${FILENAME}_static_arm Makefile
+MAKEFILE_EOF
